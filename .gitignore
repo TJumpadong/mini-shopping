@@ -1,0 +1,9 @@
+dist/
+.next/
+node_modules/
+*.log
+.nyc_output
+coverage
+test/**/out
+.DS_Store
+yarn.lock
