@@ -34,22 +34,20 @@ const HomePage = ({
             )
           }) }
         </Row>
-        <Link href="/productDetail">
-          <a>Headphone</a>
-        </Link>
       </div>
     </TemplateDefault>
     <style jsx>{`
       .container {
         padding-top: 50px;
+        min-height: 550px;
       }
     `}</style>
   </div>
 )
 
 class HomePageContainer extends React.Component {
-  static getInitialProps({ store, isServer }) {
-    store.dispatch(getProductList())
+  static async getInitialProps({ store, isServer }) {
+    await store.dispatch(getProductList())
 
     return { isServer }
   }

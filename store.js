@@ -1,14 +1,15 @@
+import superagent from 'superagent';
 import { createStore, applyMiddleware } from 'redux'
 import thunkMiddleware from 'redux-thunk'
 
 const initialState = {
-  productList: [],
-  name: 'thew'
+  productList: []
 }
 
 export const actionTypes = {
   GET_PRODUCT_LIST: 'PRODUCT/GET_PRODUCT_LIST',
-  GET_PRODUCT: 'PRODUCT/GET_PRODUCT'
+  GET_PRODUCT: 'PRODUCT/GET_PRODUCT',
+  ERROR: 'ERROR'
 }
 
 export const reducer = (state = initialState, action) => {
@@ -26,15 +27,29 @@ export const reducer = (state = initialState, action) => {
   }
 }
 
-export const getProductList = () => (dispatch, getState) => {
-  return dispatch({
-    type: actionTypes.GET_PRODUCT_LIST,
-    productList: [{
-      title: 'Title',
-      price: 100,
-      image: 'http://th-live-02.slatic.net/p/8/travel-folding-bag-black-6087-3992659-a3186cf1ab5cefff550b05aaae6607d7-webp-product.jpg'
-    }]
+const fetchProductList = () => {
+  return new Promise((resolve, reject) => {
+    const request = superagent.get('http://localhost:3000/products')
+
+    request.end((err, { body, text } = {}) => {
+      if (err) reject(body || err);
+      else resolve(body || JSON.parse(text))
+    })
   })
+}
+
+export const getProductList = () => dispatch => {
+  return fetchProductList().then(
+    result => {
+      return dispatch({
+        type: actionTypes.GET_PRODUCT_LIST,
+        productList: result
+      })
+    },
+    error => dispatch({
+      type: actionTypes.ERROR,
+    })
+  )
 }
 
 export const getProduct = () => dispatch => {
