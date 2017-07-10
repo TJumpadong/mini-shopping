@@ -1,10 +1,18 @@
+import React from 'react'
+import { bindActionCreators } from 'redux'
+import { initStore, getProductList } from '../store'
+import withRedux from 'next-redux-wrapper'
+
 import Head from 'next/head'
 import Link from 'next/link'
 import { Row, Col } from 'react-bootstrap'
 
 import TemplateDefault from '../components/TemplateDefault'
+import ProductDisplayPanel from '../components/ProductDisplayPanel'
 
-export default () => (
+const HomePage = ({
+  productList
+}) => (
   <div>
     <Head>
       <title>Mini Shopping - Million of Shops in Your Pocket</title>
@@ -14,19 +22,14 @@ export default () => (
     <TemplateDefault>
       <div className="container">
         <Row>
-          { [1, 1, 1, 1].map((value, key) => {
+          { productList.map((product, key) => {
             return (
               <Col
                 sm={ 3 }
                 md={ 3 }
                 key={ key }
               >
-                <Link>
-                  <img
-                    src="http://th-live-02.slatic.net/p/2/dt-p47-wireless-2747-0387108-e4aba6806e1c3f9d2dc11088db8c3c12-webp-product.jpg"
-                    className="prod-img"
-                  />
-                </Link>
+                <ProductDisplayPanel product={ product } />
               </Col>
             )
           }) }
@@ -40,10 +43,34 @@ export default () => (
       .container {
         padding-top: 50px;
       }
-
-      .prod-img {
-        width: 100%;
-      }
     `}</style>
   </div>
 )
+
+class HomePageContainer extends React.Component {
+  static getInitialProps({ store, isServer }) {
+    store.dispatch(getProductList())
+
+    return { isServer }
+  }
+
+  render() {
+    return (
+      <HomePage productList={ this.props.productList } />
+    )
+  }
+}
+
+const mapStateToProps = (state) => {
+  return {
+    productList: state.productList
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    getProductList: bindActionCreators(getProductList, dispatch)
+  }
+}
+
+export default withRedux(initStore, mapStateToProps, mapDispatchToProps)(HomePageContainer)
