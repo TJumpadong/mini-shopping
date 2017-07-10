@@ -7,7 +7,7 @@ import Head from 'next/head'
 import Link from 'next/link'
 import { Row, Col } from 'react-bootstrap'
 
-import TemplateDefault from '../components/TemplateDefault'
+import LayoutDefault from '../components/LayoutDefault'
 import ProductDisplayPanel from '../components/ProductDisplayPanel'
 
 const HomePage = ({
@@ -19,7 +19,7 @@ const HomePage = ({
       <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/latest/css/bootstrap.min.css" />
     </Head>
-    <TemplateDefault>
+    <LayoutDefault>
       <div className="container">
         <Row>
           { productList.map((product, key) => {
@@ -35,7 +35,7 @@ const HomePage = ({
           }) }
         </Row>
       </div>
-    </TemplateDefault>
+    </LayoutDefault>
     <style jsx>{`
       .container {
         padding-top: 50px;

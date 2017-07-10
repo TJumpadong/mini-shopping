@@ -3,12 +3,15 @@ import { createStore, applyMiddleware } from 'redux'
 import thunkMiddleware from 'redux-thunk'
 
 const initialState = {
-  productList: []
+  productList: [],
+  product: null
 }
 
 export const actionTypes = {
   GET_PRODUCT_LIST: 'PRODUCT/GET_PRODUCT_LIST',
   GET_PRODUCT: 'PRODUCT/GET_PRODUCT',
+  GET_PRODUCT_SUCCESS: 'PRODUCT/GET_PRODUCT_SUCCESS',
+  CLEAR_PRODUCT: 'PRODUCT/CLEAR_PRODUCT',
   ERROR: 'ERROR'
 }
 
@@ -22,6 +25,19 @@ export const reducer = (state = initialState, action) => {
     case actionTypes.GET_PRODUCT:
       return {
         ...state,
+        product: null,
+        productLoading: true
+      }
+    case actionTypes.GET_PRODUCT_SUCCESS:
+      return {
+        ...state,
+        product: action.product,
+        productLoading: false
+      }
+    case actionTypes.CLEAR_PRODUCT:
+      return {
+        ...state,
+        product: null
       }
     default: return state
   }
@@ -30,6 +46,17 @@ export const reducer = (state = initialState, action) => {
 const fetchProductList = () => {
   return new Promise((resolve, reject) => {
     const request = superagent.get('http://localhost:3000/products')
+
+    request.end((err, { body, text } = {}) => {
+      if (err) reject(body || err);
+      else resolve(body || JSON.parse(text))
+    })
+  })
+}
+
+const fetchProduct = (productId) => {
+  return new Promise((resolve, reject) => {
+    const request = superagent.get(`http://localhost:3000/products/${ productId }`)
 
     request.end((err, { body, text } = {}) => {
       if (err) reject(body || err);
@@ -52,9 +79,25 @@ export const getProductList = () => dispatch => {
   )
 }
 
-export const getProduct = () => dispatch => {
+export const getProduct = (productId) => dispatch => {
+  dispatch({ type: actionTypes.GET_PRODUCT })
+
+  return fetchProduct(productId).then(
+    result => {
+      return dispatch({
+        type: actionTypes.GET_PRODUCT_SUCCESS,
+        product: result
+      })
+    },
+    error => dispatch({
+      type: actionTypes.ERROR
+    })
+  )
+}
+
+export const clearProduct = () => dispatch => {
   return dispatch({
-    type: actionTypes.GET_PRODUCT
+    type: actionTypes.CLEAR_PRODUCT
   })
 }
 

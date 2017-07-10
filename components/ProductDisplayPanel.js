@@ -4,8 +4,8 @@ export default ({
   product
 }) => (
   <div>
-    <Link>
-      <img src={ product.image } className="product-image"/>
+    <Link href={{ pathname: 'product', query: { id: product._id }}}>
+      <a><img src={ product.image } className="product-image"/></a>
     </Link>
     <style jsx>{`
       .product-image {
