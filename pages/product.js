@@ -8,40 +8,31 @@ import withRedux from 'next-redux-wrapper'
 import LayoutDefault from '../components/LayoutDefault'
 
 const ProductPage = ({
-  productLoading,
-  product
+  loading,
+  product,
+  title,
 }) => (
-  <div>
-    <Head>
-      { productLoading ?
-        <title>Loading - Mini Shopping</title> :
-        <title>{ product.title } - Mini Shopping</title>
-      }
-      <meta name="viewport" content="initial-scale=1.0, width=device-width" />
-      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/latest/css/bootstrap.min.css" />
-    </Head>
-    <LayoutDefault>
-      { productLoading ?
-        <div className="container">
-          <h1>{ product.title }</h1>
-          <img src={ product.image } />
-          <label>{ product.price }</label>
-        </div> :
-        <div className="container">
-          loading...
-        </div>
-      }
-    </LayoutDefault>
+  <LayoutDefault title={ title }>
+    { loading ?
+      <div className="container">
+        loading...
+      </div> :
+      <div className="container">
+        <h1>{ product.title }</h1>
+        <img src={ product.image } />
+        <label>{ product.price }</label>
+      </div>
+    }
     <style jsx>{`
       .container {
-        padding-top: 50px;
+        padding-top: 20px;
       }
 
       h1 {
         text-style: bold;
       }
     `}</style>
-  </div>
+  </LayoutDefault>
 )
 
 class ProductPageContainer extends React.Component {
@@ -57,11 +48,18 @@ class ProductPageContainer extends React.Component {
   }
 
   render() {
-    console.log(this.props);
+    const {
+      product,
+      productLoading: loading,
+    } = this.props;
+
+    const title = loading ? 'Mini Shopping' : `${ product.title } - Mini Shopping`;
+
     return (
       <ProductPage
-        product={ this.props.product }
-        productLoading={ this.props.productLoading }
+        product={ product }
+        loading={ loading }
+        title={ title }
       />
     )
   }

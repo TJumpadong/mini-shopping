@@ -3,7 +3,6 @@ import { bindActionCreators } from 'redux'
 import { initStore, getProductList } from '../store'
 import withRedux from 'next-redux-wrapper'
 
-import Head from 'next/head'
 import Link from 'next/link'
 import { Row, Col } from 'react-bootstrap'
 
@@ -13,36 +12,29 @@ import ProductDisplayPanel from '../components/ProductDisplayPanel'
 const HomePage = ({
   productList
 }) => (
-  <div>
-    <Head>
-      <title>Mini Shopping - Million of Shops in Your Pocket</title>
-      <meta name="viewport" content="initial-scale=1.0, width=device-width" />
-      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/latest/css/bootstrap.min.css" />
-    </Head>
-    <LayoutDefault>
-      <div className="container">
-        <Row>
-          { productList.map((product, key) => {
-            return (
-              <Col
-                sm={ 3 }
-                md={ 3 }
-                key={ key }
-              >
-                <ProductDisplayPanel product={ product } />
-              </Col>
-            )
-          }) }
-        </Row>
-      </div>
-    </LayoutDefault>
+  <LayoutDefault>
+    <div className="container">
+      <Row>
+        { productList.map((product, key) => {
+          return (
+            <Col
+              sm={ 3 }
+              md={ 3 }
+              key={ key }
+            >
+              <ProductDisplayPanel product={ product } />
+            </Col>
+          )
+        }) }
+      </Row>
+    </div>
     <style jsx>{`
       .container {
         padding-top: 50px;
         min-height: 550px;
       }
     `}</style>
-  </div>
+  </LayoutDefault>
 )
 
 class HomePageContainer extends React.Component {
