@@ -1,6 +1,5 @@
 import Head from 'next/head'
 import Link from 'next/link'
-import { Row, Col } from 'react-bootstrap'
 import { bindActionCreators } from 'redux'
 import { initStore, getProduct, clearProduct } from '../store'
 import withRedux from 'next-redux-wrapper'
@@ -21,6 +20,9 @@ const ProductPage = ({
         <h1>{ product.title }</h1>
         <img src={ product.image } />
         <label>{ product.price }</label>
+        <Link href={{ pathname: 'seller', query: { id: product.seller }}}>
+          <a>Seller</a>
+        </Link>
       </div>
     }
     <style jsx>{`
